@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="listPeople">
+
+    <div ng-controller="PeopleController as q">
+        <div class="form-group">
+            <button type="button" class="btn btn-success" data-target="#addPerson" data-toggle="modal"><i class="fa fa-plus"> </i> Add New</button>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        <a href="#" ng-click="q.sortBy('Id')">
+                            {{q.showOrderArrow('Id')}}ID 
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" ng-click="q.sortBy('LastName')">
+                            {{q.showOrderArrow('LastName')}}Last Name
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" ng-click="q.sortBy('FirstName')">
+                            {{q.showOrderArrow('FirstName')}}First Name
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" ng-click="q.sortBy('Value')">
+                            {{q.showOrderArrow('Value')}}Mark
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="person in q.people">
+                    <td>{{ person.Id }}</td>
+                    <td>{{ person.LastName }}</td>
+                    <td>{{ person.FirstName }}</td>
+                    <td>{{ person.Value }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <form>
+            <div class="form-group">
+                <label for="items">Items per page:</label>
+                <input type="number" id="items" max="100" class="form-control" ng-model="q.pagingInfo.itemsPerPage" ng-change="q.reloadPeople()">
+            </div>
+        </form>
+        <uib-pagination total-items="q.pagingInfo.peopleTotal" ng-model="q.pagingInfo.currentPage" ng-change="q.reloadPeople()"
+                        items-per-page="q.pagingInfo.itemsPerPage" max-size="5" class="pagination-sm" boundary-link-numbers="true">
+        </uib-pagination>
+
+        <div id="addPerson" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h4 class="modal-title">Add Person</h4>
+                    </div>
+                    <form name="modalForm">
+                        <div class="modal-body">
+                            <input type="hidden" class="form-control" ng-model="id">
+                            <div class="error text-danger">{{message}}</div>
+                            <div class="form-group">
+                                <label for="firstName">FirstName:</label>
+                                <input type="text" class="form-control" id="firstName" ng-model="firstName" maxlength="255">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">LastName:</label>
+                                <input type="text" class="form-control" id="lastName" ng-model="lastName" maxlength="255">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Value:</label>
+                                <input type="number" class="form-control" id="value" ng-model="value" maxlength="10">
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" ng-click="Close()"><i class="fa fa-close"></i> Close</button>
+                            <button type="submit" class="btn btn-success" ng-click="SavePerson()" ng-disabled="modalForm.$invalid"><i class="fa fa-save"></i> Submit</button>
+                        </div>
+                        <ul>
+                            <li id="errorMessages" class="error text-danger" data-ng-repeat="error in errors">{{error}}</li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>   
+</section>
+
+@section FootScripts{    
+       
+    <script src="~/Scripts/app/pages/people-list/people.controller.js"></script>
+    <script src="~/Scripts/app/pages/people-list/people.service.js"></script>
+}
